@@ -30,13 +30,16 @@ jobs:
   test:
     name: Tests
     runs-on: ubuntu-latest
+    # the base of the server image, as in the devcontainer: the tests run the server's DSP filters
+    # through ffmpeg, whose filters differ between versions, so they use the ffmpeg the server has
+    container: ghcr.io/music-assistant/base:1.7.1
     steps:
+      # git for the server, which the lock file takes from its repository
+      - run: apt-get update && apt-get install -y --no-install-recommends git
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
-      # the tests decode the impulse response and run the server's convolution filter with ffmpeg
-      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg
       - run: uv sync --locked
       - run: uv run pytest
 
