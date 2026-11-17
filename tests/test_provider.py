@@ -170,9 +170,9 @@ async def test_server_plays_the_designed_convolution(mass: MusicAssistant, tmp_p
     [
         # in double precision, the server's filters are the design: the values carried over
         ("aformat=sample_fmts=dblp", 0.05),
-        # the server processes in 32-bit float, where ffmpeg's biquads miss the deepest narrow
-        # cuts in the bass by up to about a dB
-        ("", 1.5),
+        # the server processes in 32-bit float, where ffmpeg's biquads miss the deepest cuts in
+        # the bass: by 1.0 dB on arm64 and by 3.1 dB on x86_64 with the same ffmpeg 9.0.1
+        ("", 3.5),
     ],
 )
 async def test_server_plays_the_designed_peq(

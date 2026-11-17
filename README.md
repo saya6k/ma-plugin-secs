@@ -36,8 +36,10 @@ One you changed after it was applied is yours: the plugin leaves it in place.
 - **Less exact as a parametric EQ.** Without FIR the correction is coarser: in the test room the
   share of the band within ±1 dB of the target rose from 14% to 39% for L as a parametric EQ,
   and to 55% with the low latency mode as a convolution. The server also runs its biquads in
-  32-bit float, which misses the deepest narrow cuts in the bass by up to about 1 dB; in double
-  precision the server's filters match the design within 0.05 dB.
+  32-bit float, which misses the deepest cuts in the bass: in the test room a -30 dB cut at
+  48 Hz came out up to 1.0 dB shallower on arm64 and 3.1 dB shallower on x86_64, with the same
+  ffmpeg. In double precision the server's filters match the design within 0.05 dB, and a
+  convolution has no such error.
 - **48 kHz design.** SECS 2R designs at 48 kHz; the server resamples an impulse response to the
   stream's rate. A convolution keeps its shape and the balance of L and R, but at 44.1 kHz the
   overall level is about 0.4 dB higher, because the server normalises the resampled impulse
@@ -83,7 +85,8 @@ SECS 2R 프로젝트(`.secs`와 옆의 `.irs` 폴더)의 룸 보정을 SECS 2R �
   겁니다. MA 화면에서 밴드를 보고 고칠 수 있고 가볍습니다. **컨볼루션**은 프로젝트 모드의 설계 전체를
   IR 하나로 넣어 더 정확합니다.
 - 플레이어는 2채널이므로 L→L, R→R만 있는 2.0 설계만 적용됩니다(서브·MIMO 불가).
-- MA는 바이쿼드를 32비트 float로 계산해, 저역의 깊고 좁은 컷이 최대 1 dB쯤 덜 들어갑니다.
+- MA는 바이쿼드를 32비트 float로 계산해, 저역의 깊은 컷이 덜 들어갑니다. 테스트 방의 48 Hz -30 dB
+  컷이 arm64에서 최대 1.0 dB, x86_64에서 3.1 dB 얕았습니다(같은 ffmpeg). 컨볼루션에는 이 오차가 없습니다.
 - 44.1 kHz 재생에서는 서버가 IR을 리샘플링하면서 컨볼루션의 전체 레벨이 약 0.4 dB 올라갑니다.
 - `secs2r`에 Linux arm64 휠이 없어 라즈베리 파이 등에는 설치되지 않고, 커뮤니티 카탈로그 등록도
   그 휠이 PyPI에 올라온 뒤에 가능합니다. 같은 소스로 만든 arm64 휠로는 서버 arm64 이미지에서 이
