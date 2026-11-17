@@ -1,0 +1,21 @@
+{
+  "name": "Music Assistant provider",
+  "build": {"dockerfile": "Dockerfile"},
+  "containerEnv": {
+    "UV_PROJECT_ENVIRONMENT": "/opt/venv",
+    "UV_LINK_MODE": "copy"
+  },
+  "postCreateCommand": "uv sync --locked && uv run pre-commit install",
+  "forwardPorts": [8095],
+  "portsAttributes": {"8095": {"label": "Music Assistant", "onAutoForward": "openBrowser"}},
+  "customizations": {
+    "vscode": {
+      "extensions": ["ms-python.python", "ms-python.mypy-type-checker", "charliermarsh.ruff"],
+      "settings": {
+        "python.defaultInterpreterPath": "/opt/venv/bin/python",
+        "python.testing.pytestEnabled": true,
+        "[python]": {"editor.defaultFormatter": "charliermarsh.ruff"}
+      }
+    }
+  }
+}

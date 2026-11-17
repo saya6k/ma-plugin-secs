@@ -1,0 +1,11 @@
+{
+  "type": "plugin",
+  "domain": "secs_room_correction",
+  "stage": "alpha",
+  "name": "SECS 2R room correction",
+  "description": "Calculates the room correction of a SECS 2R project with the SECS 2R engine and applies it to players as a convolution filter.",
+  "codeowners": ["@saya6k"],
+  "requirements": ["secs2r==0.25.2"],
+  "documentation": "https://github.com/saya6k/ma-plugin-secs#readme",
+  "multi_instance": false
+}

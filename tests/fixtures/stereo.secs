@@ -1,0 +1,160 @@
+{
+ "array": 1,
+ "devices": {
+  "method": "none"
+ },
+ "version": 3,
+ "name": "stereo",
+ "config": {
+  "speakers": [
+   {
+    "role": "L",
+    "size": "small",
+    "bands": [
+     {
+      "band": "FULL",
+      "out": 1,
+      "pol": "+"
+     }
+    ]
+   },
+   {
+    "role": "R",
+    "size": "small",
+    "bands": [
+     {
+      "band": "FULL",
+      "out": 2,
+      "pol": "+"
+     }
+    ]
+   }
+  ],
+  "device": "",
+  "preset": "7.1.4",
+  "biamp_default": false
+ },
+ "dsp": {
+  "profile": "camilla",
+  "fir_taps": 65536,
+  "fir_taps_max": 65536,
+  "fir_budget": 2097152,
+  "iir_bands": 64,
+  "support_mode": "iir",
+  "support_taps": 1024,
+  "allpass_bands": 64,
+  "bm_path_delays": 64,
+  "bm_path_polarity": true,
+  "bm_path_allpass": 4,
+  "path_peq_bands": 16,
+  "path_allpass_bands": 8,
+  "per_output_lp": true,
+  "fir_taps_auto": true,
+  "support_taps_auto": true,
+  "name": "PC · CamillaDSP"
+ },
+ "target": {
+  "points": [
+   [
+    25.0,
+    2.0
+   ],
+   [
+    80.0,
+    2.0
+   ],
+   [
+    200.0,
+    0.0
+   ],
+   [
+    1000.0,
+    0.0
+   ],
+   [
+    16000.0,
+    -2.0
+   ]
+  ]
+ },
+ "curtain": [
+  20.0,
+  20000.0
+ ],
+ "xo": {},
+ "bc": {
+  "mode": "full",
+  "phase": "mixed",
+  "target_preset": "flat"
+ },
+ "mso": {
+  "lo": 20,
+  "hi": 150,
+  "hp": 25,
+  "maxGain": -6,
+  "maxDelay": 20,
+  "maxPer": 4,
+  "focus": 50,
+  "active": {},
+  "level": {},
+  "decay": 1
+ },
+ "measurements": [
+  {
+   "pos": 1,
+   "label": "위치 1",
+   "uuid": {
+    "L": "sample-L-1",
+    "R": "sample-R-1"
+   },
+   "mdat": null,
+   "ir": {
+    "L": "stereo.irs/L_P1.wav",
+    "R": "stereo.irs/R_P1.wav"
+   },
+   "spl_db": {
+    "L": null,
+    "R": null
+   },
+   "t0": {
+    "L": 0.0,
+    "R": 0.0
+   },
+   "done": true,
+   "sample_rate": 48000
+  },
+  {
+   "pos": 2,
+   "label": "위치 2",
+   "uuid": {
+    "L": "sample-L-2",
+    "R": "sample-R-2"
+   },
+   "mdat": null,
+   "ir": {
+    "L": "stereo.irs/L_P2.wav",
+    "R": "stereo.irs/R_P2.wav"
+   },
+   "spl_db": {
+    "L": null,
+    "R": null
+   },
+   "t0": {
+    "L": 0.0,
+    "R": 0.0
+   },
+   "done": true,
+   "sample_rate": 48000
+  }
+ ],
+ "verify": {
+  "A": null,
+  "B": null
+ },
+ "tesira": {
+  "ip": "",
+  "method": "ttp",
+  "slot": 1
+ },
+ "snapshots": []
+}

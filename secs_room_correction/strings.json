@@ -1,0 +1,26 @@
+{
+  "manifest": {
+    "name": "SECS 2R room correction",
+    "description": "Calculates the room correction of a SECS 2R project with the SECS 2R engine and applies it to players as a convolution filter."
+  },
+  "config_entries": {
+    "project": {
+      "label": "SECS 2R project",
+      "description": "Full path of a 2.0 project (.secs) on the server, with its .irs folder next to it. Measure and set it up in the SECS 2R application."
+    },
+    "players": {
+      "label": "Players",
+      "description": "The players that get the correction. Save the settings before you press a button."
+    },
+    "apply": {
+      "label": "Calculate and apply",
+      "description": "Calculates the correction of the saved project and puts it in the DSP settings of the saved players, replacing a correction applied before.",
+      "action_label": "Apply"
+    },
+    "remove": {
+      "label": "Remove the correction",
+      "description": "Removes the correction of this plugin from the DSP settings of the saved players.",
+      "action_label": "Remove"
+    }
+  }
+}
