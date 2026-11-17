@@ -8,7 +8,13 @@ import numpy as np
 import pytest
 import secs2r
 
-from secs_room_correction.engine import CorrectionError, calculate
+from secs_room_correction.engine import (
+    ChannelFilters,
+    CorrectionError,
+    PeqCorrection,
+    calculate,
+    calculate_peq,
+)
 from tests import FIXTURES
 
 
@@ -34,7 +40,43 @@ def test_the_project_is_not_written(tmp_path: Path) -> None:
     assert sorted(p.relative_to(tmp_path) for p in tmp_path.rglob("*")) == before
 
 
-def test_a_design_with_subwoofers_is_refused(tmp_path: Path) -> None:
+def test_peq_design_has_the_filters_of_each_channel(tmp_path: Path) -> None:
+    """Minimum latency mode gives peaking filters, a gain and a delay per channel, and headroom."""
+    correction = calculate_peq(_copy_fixture(tmp_path))
+
+    assert correction.design_id
+    assert correction.headroom_db == -5.0
+    for channel in (correction.left, correction.right):
+        assert len(channel.bands) == 32
+        # within what a parametric EQ of the server accepts
+        for band in channel.bands:
+            assert 0 < band.frequency <= 100000
+            assert 0.01 <= band.q <= 100
+            assert -60 <= band.gain_db <= 60
+    assert correction.left.gain_db == 0.0
+    assert correction.right.gain_db == -0.13
+    assert (correction.left.delay_ms, correction.right.delay_ms) == (0.0, 0.083)
+
+
+def test_the_delay_keeps_the_difference_of_the_channels() -> None:
+    """The delay filter delays R behind L by the design's difference, and is left out without one."""
+    still = ChannelFilters(bands=(), gain_db=0.0, delay_ms=1.0)
+    assert PeqCorrection(still, still, 0.0, None).delay() is None
+
+    later = ChannelFilters(bands=(), gain_db=0.0, delay_ms=3.0)
+    delay = PeqCorrection(still, later, 0.0, None).delay()
+    assert delay is not None
+    assert delay.sample_rate == 48000
+    samples = _float_samples(delay.wav)
+    # a 2 ms difference is 96 samples at 48 kHz
+    assert np.diff(np.abs(samples).argmax(axis=0)) == 96
+    # each channel passes the signal at unity gain
+    assert samples.sum(axis=0) == pytest.approx(1.0, abs=1e-4)
+    assert delay.gain_db == pytest.approx(20 * np.log10(np.abs(samples).sum(axis=0).max()), 1e-3)
+
+
+@pytest.mark.parametrize("calculation", [calculate, calculate_peq])
+def test_a_design_with_subwoofers_is_refused(tmp_path: Path, calculation: object) -> None:
     """A player has two channels: the 7.1.4 sample room with subwoofers cannot be applied."""
     project = tmp_path / "room.secs"
     engine = secs2r.Engine(tmp_path / "settings.json")
@@ -48,8 +90,9 @@ def test_a_design_with_subwoofers_is_refused(tmp_path: Path) -> None:
     assert engine.wait_job(job["data"]["job"], 600)["status"] == "succeeded"
     engine.call({"method": "project_save", "params": {}})
 
+    assert callable(calculation)
     with pytest.raises(CorrectionError, match=r"must be 2\.0"):
-        calculate(project)
+        calculation(project)
 
 
 def test_a_missing_project_is_refused(tmp_path: Path) -> None:
