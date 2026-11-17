@@ -34,8 +34,9 @@ jobs:
     # through ffmpeg, whose filters differ between versions, so they use the ffmpeg the server has
     container: ghcr.io/music-assistant/base:1.7.1
     steps:
-      # git for the server, which the lock file takes from its repository
-      - run: apt-get update && apt-get install -y --no-install-recommends git
+      # as in the devcontainer: git for the server, which the lock file takes from its repository,
+      # and the compilers for a server requirement that is built from source
+      - run: apt-get update && apt-get install -y --no-install-recommends git gcc g++
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
